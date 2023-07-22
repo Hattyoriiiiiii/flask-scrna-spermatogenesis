@@ -10,6 +10,10 @@
 
 <br>
 
+![Usage Demo](assets/usage_demo.gif)
+
+<br>
+
 ## Set up locally
 
 Follow these steps to run the app locally.
