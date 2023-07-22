@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+    <title>Gene Expression Visualizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 80%;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #008080; /* Teal color for headings */
+        }
+        p {
+            font-size: 18px;
+            color: #808080; /* Soft gray for regular text */
+        }
+        a {
+            color: #42B959; /* Lime green for emphasis */
+            text-decoration: none;
+        }
+        a:hover {
+            color: #228B22; /* Forest green for hover effect */
+        }
+        form {
+            margin-top: 20px;
+        }
+        form input[type=submit] {
+            color: #fff;
+            background-color: #42B959; /* Lime green for emphasis */
+            border-color: #42B959; /* Lime green for emphasis */
+            padding: .5rem 1rem;
+            border-radius: .25rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+        form input[type=submit]:hover {
+            background-color: #228B22; /* Forest green for hover effect */
+        }
+        footer {
+            padding: 20px;
+            text-align: center;
+            color: #808080;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>① Upload input file or ② Enter gene names</h1>
+        <p>
+            入力ファイルの例: <a href="/download">input.txt</a> <br>
+        </p>
+        <form method=post enctype=multipart/form-data>
+            <input type="file" name="gene_file"><br><br>
+            <input type="text" name="gene_names" size="50" placeholder="Or enter gene names separated by comma..."><br><br>
+            <input type=submit value=Submit>
+        </form>
+    </div>
+    <footer>
+        <a href="https://github.com/Hattyoriiiiiii/flask-scrna-spermatogenesis">View the source code on GitHub</a>
+    </footer>
+</body>
+</html>
