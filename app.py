@@ -29,7 +29,10 @@ def index():
         for i in range(len(filtered_data)):
             plt.plot(filtered_data.columns[1:], filtered_data.iloc[i, 1:])
         plt.title('Gene Expression during spermatogenesis')
-        plt.ylabel('Expression (TP10K)')
+        if normalize:
+            plt.ylabel('Expression (z-score)')
+        else:
+            plt.ylabel('Expression (TP10K)')
         if len(filtered_data) <= 10:
             # plt.legend(filtered_data['symbol'], loc='upper left')
             plt.legend(filtered_data['symbol'], loc='best')
