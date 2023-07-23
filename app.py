@@ -20,7 +20,11 @@ def index():
             input_genes = file.read().decode().splitlines()
         else:
             input_genes = request.form['gene_names'].replace(" ","").split(',')
+        
+        normalize = request.form.get('zscore') == 'on'
         filtered_data = data[data['symbol'].isin(input_genes)]
+        if normalize:
+            filtered_data.iloc[:, 1:] = filtered_data.iloc[:, 1:].apply(lambda x: (x - x.mean()) / x.std(), axis=1)
         img = io.BytesIO()
         for i in range(len(filtered_data)):
             plt.plot(filtered_data.columns[1:], filtered_data.iloc[i, 1:])
