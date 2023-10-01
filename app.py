@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, send_file
 import pandas as pd
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+matplotlib.use('Agg')
+import seaborn as sns
 import io
 import base64
 import urllib
@@ -23,11 +24,14 @@ def index():
         
         normalize = request.form.get('zscore') == 'on'
         filtered_data = data[data['symbol'].isin(input_genes)]
+        filtered_data = filtered_data.dropna()
+        filtered_data = filtered_data[filtered_data.iloc[:, 1:].std(axis=1) != 0]
+
         if normalize:
             filtered_data.iloc[:, 1:] = filtered_data.iloc[:, 1:].apply(lambda x: (x - x.mean()) / x.std(), axis=1)
         
         # Create the subplot layout
-        fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
+        fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(12, 10))
         
         for i in range(len(filtered_data)):
             axes[0].plot(filtered_data.columns[1:], filtered_data.iloc[i, 1:])
@@ -37,7 +41,6 @@ def index():
         else:
             axes[0].set_ylabel('Expression (TP10K)')
         if len(filtered_data) <= 10:
-            # axes[0].legend(filtered_data['symbol'], loc='upper left')
             axes[0].legend(filtered_data['symbol'], loc='best')
         axes[0].set_xticklabels(filtered_data.columns[1:], rotation=30)
         
@@ -62,14 +65,26 @@ def index():
         axes[1].set_ylabel('Expression')
         axes[1].set_xticklabels(filtered_data.columns[1:], rotation=30)
         axes[1].legend()
-        
+
         img = io.BytesIO()
         plt.tight_layout()
         plt.savefig(img, format='png')
         plt.close()
         img.seek(0)
-        plot_url = base64.b64encode(img.getvalue()).decode()
-        return '<img src="data:image/png;base64,{}">'.format(plot_url)
+        plot_url1 = base64.b64encode(img.getvalue()).decode()
+
+        # Hierarchical clustering and heatmap
+        filtered_data.set_index('symbol', inplace=True)
+        # cluster_grid = sns.clustermap(filtered_data.set_index('symbol'), col_cluster=False, cmap='viridis', cbar_kws={'label': 'Z-score'})
+        cluster_grid = sns.clustermap(filtered_data, col_cluster=False, z_score=0, cmap="vlag")
+
+        plt.close()
+        img = io.BytesIO()
+        cluster_grid.savefig(img, format='png')
+        img.seek(0)
+        plot_url2 = base64.b64encode(img.getvalue()).decode()
+
+        return '<img src="data:image/png;base64,{}"><img src="data:image/png;base64,{}">'.format(plot_url1, plot_url2)
     return render_template('index.html')
 
 @app.route('/download')

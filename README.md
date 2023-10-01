@@ -29,7 +29,7 @@ Follow these steps to run the app locally.
 
     ```bash
     python3 -m pip install --upgrade pip
-    pip install flask pandas matplotlib
+    pip install flask pandas matplotlib seaborn scipy
     ```
 
 3. Run the app:
